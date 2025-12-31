@@ -1,13 +1,51 @@
-<div id="camera-screen">
-    <video id="video" autoplay playsinline></video>
-    
-    <div id="film-indicator">LOADED: KODAK PORTRA 400</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>FilmCam Pro</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
 
-    <div class="top-controls">
+    <div id="camera-screen">
+        <video id="video" autoplay playsinline></video>
+        
+        <div class="top-controls">
+            <div class="slider-box">
+                <label>EXPOSURE</label>
+                <input type="range" id="exposure" min="0.5" max="1.5" step="0.1" value="1">
+            </div>
+            <div class="slider-box">
+                <label>WARMTH</label>
+                <input type="range" id="warmth" min="0" max="100" step="5" value="20">
+            </div>
         </div>
 
-    <div class="bottom-controls">
-        <button id="capture-btn"></button>
-        <div id="gallery-trigger" class="thumbnail"></div>
+        <div id="film-indicator">LOADED: KODAK PORTRA 400</div>
+
+        <div class="bottom-controls">
+            <button id="capture-btn" aria-label="Take Photo"></button>
+            <div id="gallery-trigger" class="thumbnail"></div>
+        </div>
     </div>
-</div>
+
+    <div id="gallery-screen" class="hidden">
+        <div class="gallery-header">
+            <button id="close-gallery">← CAMERA</button>
+            <h2>FILM ROLL</h2>
+            <button id="connect-folder">📁 SYNC</button>
+        </div>
+        <div id="gallery-grid">
+            </div>
+    </div>
+
+    <canvas id="photo-canvas" style="display:none;"></canvas>
+
+    <script src="app.js"></script>
+</body>
+</html>
