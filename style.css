@@ -1,36 +1,107 @@
-body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; font-family: 'Share Tech Mono', monospace; }
-
-#app-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; }
-
-#video { width: 100%; height: 100%; object-fit: cover; transition: filter 0.1s; }
-
-.grain-overlay {
-    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none; opacity: 0.05;
-    background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-    animation: grain-shift 0.2s steps(2) infinite;
+/* --- 1. GLOBAL & PWA RESETS --- */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    overflow: hidden; /* Prevents bounce scrolling on mobile */
+    font-family: 'Share Tech Mono', monospace;
+    user-select: none; /* Makes it feel more like a native app */
+    -webkit-tap-highlight-color: transparent;
 }
 
-@keyframes grain-shift { 0% { background-position: 0 0; } 100% { background-position: 15px 15px; } }
-
-.slider-sidebar {
-    position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-    display: flex; flex-direction: column; gap: 25px;
-    background: rgba(0, 0, 0, 0.5); padding: 20px 10px; border-radius: 15px; backdrop-filter: blur(8px);
+/* --- 2. CAMERA VIEWPORT --- */
+#camera-screen {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
-.control-group { display: flex; flex-direction: column; align-items: center; color: #ff9d00; font-size: 11px; }
-
-input[type=range] { writing-mode: bt-lr; appearance: slider-vertical; width: 10px; height: 80px; margin-top: 10px; }
-
-.controls { position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; align-items: center; }
-
-#capture-btn {
-    width: 75px; height: 75px; border-radius: 50%; border: 4px solid white;
-    background: rgba(255, 255, 255, 0.2); cursor: pointer;
+#video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
 }
 
-.thumbnail {
-    position: absolute; right: 25px; width: 55px; height: 55px;
-    border: 2px solid white; border-radius: 4px; background-size: cover; background-position: center;
+/* --- 3. TOP HORIZONTAL SLIDERS --- */
+.top-controls {
+    position: absolute;
+    top: env(safe-area-inset-top, 20px); /* Adjusts for iPhone notches */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+    padding: 10px 0;
 }
+
+.slider-box {
+    width: 85%;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 12px 20px;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.slider-box label {
+    color: #ff9d00;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-right: 15px;
+}
+
+input[type=range] {
+    flex-grow: 1;
+    height: 4px;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* --- 4. FILM INDICATOR (Bottom Left) --- */
+#film-indicator {
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom, 40px) + 80px);
+    left: 20px;
+    z-index: 10;
+    color: #00ff00; /* Neon retro green */
+    font-size: 13px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 6px 12px;
+    border-radius: 3px;
+    border-left: 3px solid #00ff00;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+/* --- 5. BOTTOM CONTROLS --- */
+.bottom-controls {
+    position: absolute;
+    bottom: env(safe-area-inset-bottom, 40px);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+#
