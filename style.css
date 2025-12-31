@@ -1,0 +1,36 @@
+body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; overflow: hidden; font-family: 'Share Tech Mono', monospace; }
+
+#app-container { position: relative; width: 100vw; height: 100vh; display: flex; justify-content: center; align-items: center; }
+
+#video { width: 100%; height: 100%; object-fit: cover; transition: filter 0.1s; }
+
+.grain-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; opacity: 0.05;
+    background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
+    animation: grain-shift 0.2s steps(2) infinite;
+}
+
+@keyframes grain-shift { 0% { background-position: 0 0; } 100% { background-position: 15px 15px; } }
+
+.slider-sidebar {
+    position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 25px;
+    background: rgba(0, 0, 0, 0.5); padding: 20px 10px; border-radius: 15px; backdrop-filter: blur(8px);
+}
+
+.control-group { display: flex; flex-direction: column; align-items: center; color: #ff9d00; font-size: 11px; }
+
+input[type=range] { writing-mode: bt-lr; appearance: slider-vertical; width: 10px; height: 80px; margin-top: 10px; }
+
+.controls { position: absolute; bottom: 40px; width: 100%; display: flex; justify-content: center; align-items: center; }
+
+#capture-btn {
+    width: 75px; height: 75px; border-radius: 50%; border: 4px solid white;
+    background: rgba(255, 255, 255, 0.2); cursor: pointer;
+}
+
+.thumbnail {
+    position: absolute; right: 25px; width: 55px; height: 55px;
+    border: 2px solid white; border-radius: 4px; background-size: cover; background-position: center;
+}
