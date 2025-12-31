@@ -7,7 +7,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <meta name="theme-color" content="#1a1a1a">
+    <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
@@ -23,6 +23,10 @@
             <div class="slider-box">
                 <label>WARMTH</label>
                 <input type="range" id="warmth" min="0" max="100" step="5" value="20">
+            </div>
+            <div class="slider-box">
+                <label>DBL EXPOSURE</label>
+                <button id="double-toggle" class="toggle-btn">OFF</button>
             </div>
         </div>
 
@@ -40,12 +44,10 @@
             <h2>FILM ROLL</h2>
             <button id="connect-folder">📁 SYNC</button>
         </div>
-        <div id="gallery-grid">
-            </div>
+        <div id="gallery-grid"></div>
     </div>
 
     <canvas id="photo-canvas" style="display:none;"></canvas>
-
     <script src="app.js"></script>
 </body>
 </html>
