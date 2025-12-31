@@ -1,51 +1,50 @@
-const video = document.getElementById('video');
-const canvas = document.getElementById('photo-canvas');
-const captureBtn = document.getElementById('capture-btn');
-const expIn = document.getElementById('exposure');
-const warmIn = document.getElementById('warmth');
-const grainIn = document.getElementById('grain-slider');
-const grainDiv = document.getElementById('grain');
+const presets = [
+    { name: "KODAK PORTRA 400", filter: "sepia(0.2) contrast(1.1) saturate(1.2)" },
+    { name: "FUJI VELVIA", filter: "contrast(1.4) saturate(1.8) hue-rotate(-5deg)" },
+    { name: "ILFORD HP5", filter: "grayscale(1) contrast(1.2) brightness(1.1)" },
+    { name: "KODAK GOLD 200", filter: "sepia(0.4) brightness(1.1) contrast(1.1)" },
+    { name: "AGFA VISTA 400", filter: "saturate(1.5) contrast(1.2) hue-rotate(10deg)" },
+    { name: "POLAROID 600", filter: "sepia(0.2) brightness(1.1) contrast(0.9) hue-rotate(-10deg)" },
+    { name: "KODACHROME 64", filter: "contrast(1.3) saturate(1.4) sepia(0.1)" },
+    { name: "CINESTILL 800T", filter: "hue-rotate(160deg) saturate(0.8) contrast(1.1)" },
+    { name: "LOMO PURPLE", filter: "hue-rotate(270deg) saturate(1.3)" },
+    { name: "FUJI SUPERIA", filter: "hue-rotate(10deg) sepia(0.1) saturate(1.1)" },
+    { name: "TECHNICOLOR", filter: "saturate(2.5) contrast(1.3)" },
+    { name: "EKTACHROME", filter: "hue-rotate(190deg) saturate(1.2) brightness(1.05)" },
+    { name: "CROSS PROCESS", filter: "contrast(1.5) hue-rotate(20deg) sepia(0.3)" },
+    { name: "FADED 70S", filter: "brightness(1.2) contrast(0.8) sepia(0.3)" },
+    { name: "NOIR", filter: "grayscale(1) contrast(1.8) brightness(0.8)" },
+    { name: "SEPIA 1890", filter: "sepia(1) contrast(0.9) brightness(0.9)" },
+    { name: "CYANOTYPE", filter: "hue-rotate(180deg) sepia(1) saturate(2) brightness(0.8)" },
+    { name: "BLEACH BYPASS", filter: "saturate(0.4) contrast(1.6)" },
+    { name: "WASHI S", filter: "grayscale(1) contrast(2.2)" },
+    { name: "INSTANT TEAL", filter: "hue-rotate(150deg) sepia(0.4) saturate(1.1)" }
+];
 
-async function init() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
-        video.srcObject = stream;
-    } catch (e) { alert("Camera error: " + e); }
+let currentPreset = presets[0];
+
+function applyRandomPreset() {
+    currentPreset = presets[Math.floor(Math.random() * presets.length)];
+    document.getElementById('film-indicator').innerText = `LOADED: ${currentPreset.name}`;
+    updateUI(); // Apply the visual change
 }
 
 function updateUI() {
-    video.style.filter = `brightness(${expIn.value}) sepia(${warmIn.value}%) contrast(1.1)`;
-    grainDiv.style.opacity = grainIn.value;
+    const exp = document.getElementById('exposure').value;
+    const warm = document.getElementById('warmth').value;
+    
+    // Combine the chosen film preset with the user's slider adjustments
+    video.style.filter = `${currentPreset.filter} brightness(${exp}) sepia(${warm/100})`;
 }
 
-[expIn, warmIn, grainIn].forEach(i => i.addEventListener('input', updateUI));
-
-captureBtn.addEventListener('click', () => {
-    const ctx = canvas.getContext('2d');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    // Apply Filters to Canvas
-    ctx.filter = `brightness(${expIn.value}) sepia(${warmIn.value}%) contrast(1.1) saturate(1.2)`;
+// Inside your Capture Button Event Listener:
+captureBtn.addEventListener('click', async () => {
+    // ... (Your existing canvas drawing logic) ...
+    
+    // Use the combined filters for the save
+    ctx.filter = video.style.filter;
     ctx.drawImage(video, 0, 0);
 
-    // Add Retro Stamp
-    const now = new Date();
-    const dateStr = now.toLocaleDateString().replace(/\//g, '.');
-    ctx.filter = "none";
-    ctx.fillStyle = "rgba(255, 120, 0, 0.85)";
-    ctx.font = "bold 32px 'Share Tech Mono', monospace";
-    ctx.textAlign = "right";
-    ctx.fillText("LUMINA GX-70", canvas.width - 40, canvas.height - 80);
-    ctx.fillText(dateStr, canvas.width - 40, canvas.height - 40);
-
-    const dataUrl = canvas.toDataURL('image/jpeg');
-    const link = document.createElement('a');
-    link.download = `FILM_${Date.now()}.jpg`;
-    link.href = dataUrl;
-    link.click();
-    document.getElementById('last-photo-preview').style.backgroundImage = `url(${dataUrl})`;
+    // After saving, switch the "film roll"
+    applyRandomPreset();
 });
-
-if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
-init();
